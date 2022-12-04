@@ -113,7 +113,7 @@ const drawStar = (star: star) => {
           canvasData.data[index + canvasWidth * i * 4] = 0;
           canvasData.data[index + 1 + canvasWidth * i * 4] = 0;
           canvasData.data[index + 2 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 3 + canvasWidth * i * 4] = alpha;
+          canvasData.data[index + 3 + canvasWidth * i * 4] = 0;
         } else {
           canvasData.data[index + canvasWidth * i * 4] = red;
           canvasData.data[index + 1 + canvasWidth * i * 4] = green;
@@ -130,7 +130,7 @@ const drawStar = (star: star) => {
           canvasData.data[index + 8 + canvasWidth * i * 4] = 0;
           canvasData.data[index + 9 + canvasWidth * i * 4] = 0;
           canvasData.data[index + 10 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 11 + canvasWidth * i * 4] = alpha;
+          canvasData.data[index + 11 + canvasWidth * i * 4] = 0;
         } else {
           canvasData.data[index + 8 + canvasWidth * i * 4] = red;
           canvasData.data[index + 9 + canvasWidth * i * 4] = green;
@@ -145,7 +145,7 @@ const drawStar = (star: star) => {
           canvasData.data[index + canvasWidth * i * 4] = 0;
           canvasData.data[index + 1 + canvasWidth * i * 4] = 0;
           canvasData.data[index + 2 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 3 + canvasWidth * i * 4] = alpha;
+          canvasData.data[index + 3 + canvasWidth * i * 4] = 0;
         } else {
           canvasData.data[index + canvasWidth * i * 4] = red;
           canvasData.data[index + 1 + canvasWidth * i * 4] = green;
@@ -166,7 +166,7 @@ const drawStar = (star: star) => {
           canvasData.data[index + 12 + canvasWidth * i * 4] = 0;
           canvasData.data[index + 13 + canvasWidth * i * 4] = 0;
           canvasData.data[index + 14 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 15 + canvasWidth * i * 4] = alpha;
+          canvasData.data[index + 15 + canvasWidth * i * 4] = 0;
         } else {
           canvasData.data[index + 12 + canvasWidth * i * 4] = red;
           canvasData.data[index + 13 + canvasWidth * i * 4] = green;
@@ -181,7 +181,7 @@ const drawStar = (star: star) => {
           canvasData.data[index + canvasWidth * i * 4] = 0;
           canvasData.data[index + 1 + canvasWidth * i * 4] = 0;
           canvasData.data[index + 2 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 3 + canvasWidth * i * 4] = alpha;
+          canvasData.data[index + 3 + canvasWidth * i * 4] = 0;
         } else {
           canvasData.data[index + canvasWidth * i * 4] = red;
           canvasData.data[index + 1 + canvasWidth * i * 4] = green;
@@ -192,7 +192,7 @@ const drawStar = (star: star) => {
           canvasData.data[index + 4 + canvasWidth * i * 4] = 0;
           canvasData.data[index + 5 + canvasWidth * i * 4] = 0;
           canvasData.data[index + 6 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 7 + canvasWidth * i * 4] = alpha;
+          canvasData.data[index + 7 + canvasWidth * i * 4] = 0;
         } else {
           canvasData.data[index + 4 + canvasWidth * i * 4] = red;
           canvasData.data[index + 5 + canvasWidth * i * 4] = green;
@@ -209,7 +209,7 @@ const drawStar = (star: star) => {
           canvasData.data[index + 12 + canvasWidth * i * 4] = 0;
           canvasData.data[index + 13 + canvasWidth * i * 4] = 0;
           canvasData.data[index + 14 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 15 + canvasWidth * i * 4] = alpha;
+          canvasData.data[index + 15 + canvasWidth * i * 4] = 0;
         } else {
           canvasData.data[index + 12 + canvasWidth * i * 4] = red;
           canvasData.data[index + 13 + canvasWidth * i * 4] = green;
@@ -221,7 +221,7 @@ const drawStar = (star: star) => {
           canvasData.data[index + 16 + canvasWidth * i * 4] = 0;
           canvasData.data[index + 17 + canvasWidth * i * 4] = 0;
           canvasData.data[index + 18 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 19 + canvasWidth * i * 4] = alpha;
+          canvasData.data[index + 19 + canvasWidth * i * 4] = 0;
         } else {
           canvasData.data[index + 16 + canvasWidth * i * 4] = red;
           canvasData.data[index + 17 + canvasWidth * i * 4] = green;
