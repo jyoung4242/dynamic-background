@@ -35,6 +35,8 @@ type star = {
     isActive: boolean;
     counter: number;
   };
+  isAnimated?: boolean;
+  animationTik?: number;
 };
 
 function fbm2d(noise2D: NoiseFunction2D, octaves: number): NoiseFunction2D {
@@ -63,18 +65,16 @@ function hexToB(h: string): number {
 
 const drawStar = (star: star) => {
   //x,y are percent of canvassize
-  let alpha: number;
+  let alpha: number = 255;
   if (star.twinkle.isActive && star.twinkle.counter < 3) {
     alpha = 80;
     star.twinkle.counter += 1;
   } else if (star.twinkle.isActive && star.twinkle.counter >= 3) {
-    alpha = 255;
     star.twinkle.isActive = false;
     star.twinkle.counter = 0;
   } else {
     //random chance of twinkling
-    if (chance.floating({ min: 0.0, max: 100.0 }) <= 2.0) {
-      alpha = 80;
+    if (chance.floating({ min: 0.0, max: 100.0 }) <= 0.5) {
       star.twinkle.counter += 1;
       star.twinkle.isActive = true;
     }
@@ -87,164 +87,215 @@ const drawStar = (star: star) => {
   const red = hexToR(star.color);
   const green = hexToG(star.color);
   const blue = hexToB(star.color);
-  switch (star.r) {
-    case 1:
-      canvasData.data[index] = red;
-      canvasData.data[index + 1] = green;
-      canvasData.data[index + 2] = blue;
-      canvasData.data[index + 3] = alpha;
-      break;
-    case 2:
-      for (let i = 0; i < 2; i++) {
-        canvasData.data[index + canvasWidth * i * 4] = red;
-        canvasData.data[index + 1 + canvasWidth * i * 4] = green;
-        canvasData.data[index + 2 + canvasWidth * i * 4] = blue;
-        canvasData.data[index + 3 + canvasWidth * i * 4] = alpha;
-        canvasData.data[index + 4 + canvasWidth * i * 4] = red;
-        canvasData.data[index + 5 + canvasWidth * i * 4] = green;
-        canvasData.data[index + 6 + canvasWidth * i * 4] = blue;
-        canvasData.data[index + 7 + canvasWidth * i * 4] = alpha;
-      }
 
-      break;
-    case 3:
-      for (let i = 0; i < 3; i++) {
-        if (i == 0 || i == 2) {
-          canvasData.data[index + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 1 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 2 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 3 + canvasWidth * i * 4] = 0;
-        } else {
+  if (!star.twinkle.isActive) {
+    switch (star.r) {
+      case 1:
+        canvasData.data[index] = red;
+        canvasData.data[index + 1] = green;
+        canvasData.data[index + 2] = blue;
+        canvasData.data[index + 3] = alpha;
+        break;
+      case 2:
+        for (let i = 0; i < 2; i++) {
           canvasData.data[index + canvasWidth * i * 4] = red;
           canvasData.data[index + 1 + canvasWidth * i * 4] = green;
           canvasData.data[index + 2 + canvasWidth * i * 4] = blue;
           canvasData.data[index + 3 + canvasWidth * i * 4] = alpha;
-        }
-
-        canvasData.data[index + 4 + canvasWidth * i * 4] = red;
-        canvasData.data[index + 5 + canvasWidth * i * 4] = green;
-        canvasData.data[index + 6 + canvasWidth * i * 4] = blue;
-        canvasData.data[index + 7 + canvasWidth * i * 4] = alpha;
-
-        if (i == 0 || i == 2) {
-          canvasData.data[index + 8 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 9 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 10 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 11 + canvasWidth * i * 4] = 0;
-        } else {
-          canvasData.data[index + 8 + canvasWidth * i * 4] = red;
-          canvasData.data[index + 9 + canvasWidth * i * 4] = green;
-          canvasData.data[index + 10 + canvasWidth * i * 4] = blue;
-          canvasData.data[index + 11 + canvasWidth * i * 4] = alpha;
-        }
-      }
-      break;
-    case 4:
-      for (let i = 0; i < 4; i++) {
-        if (i == 0 || i == 3) {
-          canvasData.data[index + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 1 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 2 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 3 + canvasWidth * i * 4] = 0;
-        } else {
-          canvasData.data[index + canvasWidth * i * 4] = red;
-          canvasData.data[index + 1 + canvasWidth * i * 4] = green;
-          canvasData.data[index + 2 + canvasWidth * i * 4] = blue;
-          canvasData.data[index + 3 + canvasWidth * i * 4] = alpha;
-        }
-
-        canvasData.data[index + 4 + canvasWidth * i * 4] = red;
-        canvasData.data[index + 5 + canvasWidth * i * 4] = green;
-        canvasData.data[index + 6 + canvasWidth * i * 4] = blue;
-        canvasData.data[index + 7 + canvasWidth * i * 4] = alpha;
-        canvasData.data[index + 8 + canvasWidth * i * 4] = red;
-        canvasData.data[index + 9 + canvasWidth * i * 4] = green;
-        canvasData.data[index + 10 + canvasWidth * i * 4] = blue;
-        canvasData.data[index + 11 + canvasWidth * i * 4] = alpha;
-
-        if (i == 0 || i == 3) {
-          canvasData.data[index + 12 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 13 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 14 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 15 + canvasWidth * i * 4] = 0;
-        } else {
-          canvasData.data[index + 12 + canvasWidth * i * 4] = red;
-          canvasData.data[index + 13 + canvasWidth * i * 4] = green;
-          canvasData.data[index + 14 + canvasWidth * i * 4] = blue;
-          canvasData.data[index + 15 + canvasWidth * i * 4] = alpha;
-        }
-      }
-      break;
-    case 5:
-      for (let i = 0; i < 5; i++) {
-        if (i != 2) {
-          canvasData.data[index + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 1 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 2 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 3 + canvasWidth * i * 4] = 0;
-        } else {
-          canvasData.data[index + canvasWidth * i * 4] = red;
-          canvasData.data[index + 1 + canvasWidth * i * 4] = green;
-          canvasData.data[index + 2 + canvasWidth * i * 4] = blue;
-          canvasData.data[index + 3 + canvasWidth * i * 4] = alpha;
-        }
-        if (i == 0 || i == 4) {
-          canvasData.data[index + 4 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 5 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 6 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 7 + canvasWidth * i * 4] = 0;
-        } else {
           canvasData.data[index + 4 + canvasWidth * i * 4] = red;
           canvasData.data[index + 5 + canvasWidth * i * 4] = green;
           canvasData.data[index + 6 + canvasWidth * i * 4] = blue;
           canvasData.data[index + 7 + canvasWidth * i * 4] = alpha;
         }
 
-        canvasData.data[index + 8 + canvasWidth * i * 4] = red;
-        canvasData.data[index + 9 + canvasWidth * i * 4] = green;
-        canvasData.data[index + 10 + canvasWidth * i * 4] = blue;
-        canvasData.data[index + 11 + canvasWidth * i * 4] = alpha;
-
-        if (i == 0 || i == 4) {
-          canvasData.data[index + 12 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 13 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 14 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 15 + canvasWidth * i * 4] = 0;
+        break;
+      case 3:
+        for (let i = 0; i < 3; i++) {
+          if (i == 0 || i == 2) {
+            canvasData.data[index + 4 + canvasWidth * i * 4] = red;
+            canvasData.data[index + 5 + canvasWidth * i * 4] = green;
+            canvasData.data[index + 6 + canvasWidth * i * 4] = blue;
+            canvasData.data[index + 7 + canvasWidth * i * 4] = alpha;
+          }
+          if (i == 1) {
+            canvasData.data[index + canvasWidth * i * 4] = red;
+            canvasData.data[index + 1 + canvasWidth * i * 4] = green;
+            canvasData.data[index + 2 + canvasWidth * i * 4] = blue;
+            canvasData.data[index + 3 + canvasWidth * i * 4] = alpha;
+            canvasData.data[index + 4 + canvasWidth * i * 4] = red;
+            canvasData.data[index + 5 + canvasWidth * i * 4] = green;
+            canvasData.data[index + 6 + canvasWidth * i * 4] = blue;
+            canvasData.data[index + 7 + canvasWidth * i * 4] = alpha;
+            canvasData.data[index + 8 + canvasWidth * i * 4] = red;
+            canvasData.data[index + 9 + canvasWidth * i * 4] = green;
+            canvasData.data[index + 10 + canvasWidth * i * 4] = blue;
+            canvasData.data[index + 11 + canvasWidth * i * 4] = alpha;
+          }
+        }
+        break;
+      case 4:
+        for (let i = 0; i < 4; i++) {
+          if (i == 0 || i == 3) {
+            canvasData.data[index + 4 + canvasWidth * i * 4] = red;
+            canvasData.data[index + 5 + canvasWidth * i * 4] = green;
+            canvasData.data[index + 6 + canvasWidth * i * 4] = blue;
+            canvasData.data[index + 7 + canvasWidth * i * 4] = alpha;
+            canvasData.data[index + 8 + canvasWidth * i * 4] = red;
+            canvasData.data[index + 9 + canvasWidth * i * 4] = green;
+            canvasData.data[index + 10 + canvasWidth * i * 4] = blue;
+            canvasData.data[index + 11 + canvasWidth * i * 4] = alpha;
+          }
+          if (i == 1 || i == 2) {
+            canvasData.data[index + canvasWidth * i * 4] = red;
+            canvasData.data[index + 1 + canvasWidth * i * 4] = green;
+            canvasData.data[index + 2 + canvasWidth * i * 4] = blue;
+            canvasData.data[index + 3 + canvasWidth * i * 4] = alpha;
+            canvasData.data[index + 4 + canvasWidth * i * 4] = red;
+            canvasData.data[index + 5 + canvasWidth * i * 4] = green;
+            canvasData.data[index + 6 + canvasWidth * i * 4] = blue;
+            canvasData.data[index + 7 + canvasWidth * i * 4] = alpha;
+            canvasData.data[index + 8 + canvasWidth * i * 4] = red;
+            canvasData.data[index + 9 + canvasWidth * i * 4] = green;
+            canvasData.data[index + 10 + canvasWidth * i * 4] = blue;
+            canvasData.data[index + 11 + canvasWidth * i * 4] = alpha;
+            canvasData.data[index + 12 + canvasWidth * i * 4] = red;
+            canvasData.data[index + 13 + canvasWidth * i * 4] = green;
+            canvasData.data[index + 14 + canvasWidth * i * 4] = blue;
+            canvasData.data[index + 15 + canvasWidth * i * 4] = alpha;
+          }
+        }
+        break;
+      case 5:
+        if (star.isAnimated) {
+          star.animationTik += 1;
+          if (star.animationTik >= 8) {
+            star.animationTik = 0;
+            star.isAnimated = false;
+          }
         } else {
-          canvasData.data[index + 12 + canvasWidth * i * 4] = red;
-          canvasData.data[index + 13 + canvasWidth * i * 4] = green;
-          canvasData.data[index + 14 + canvasWidth * i * 4] = blue;
-          canvasData.data[index + 15 + canvasWidth * i * 4] = alpha;
+          //random chance that
+          const roll = chance.floating({ min: 0.1, max: 100.0 });
+          if (roll < 2.0) star.isAnimated = true;
         }
 
-        if (i != 2) {
-          canvasData.data[index + 16 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 17 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 18 + canvasWidth * i * 4] = 0;
-          canvasData.data[index + 19 + canvasWidth * i * 4] = 0;
-        } else {
-          canvasData.data[index + 16 + canvasWidth * i * 4] = red;
-          canvasData.data[index + 17 + canvasWidth * i * 4] = green;
-          canvasData.data[index + 18 + canvasWidth * i * 4] = blue;
-          canvasData.data[index + 19 + canvasWidth * i * 4] = alpha;
+        for (let i = 0; i < 7; i++) {
+          {
+            if (i == 1 || i == 5) {
+              canvasData.data[index + 8 + canvasWidth * i * 4] = red;
+              canvasData.data[index + 9 + canvasWidth * i * 4] = green;
+              canvasData.data[index + 10 + canvasWidth * i * 4] = blue;
+              canvasData.data[index + 11 + canvasWidth * i * 4] = alpha;
+            }
+            if (i == 2 || i == 4) {
+              canvasData.data[index + 4 + canvasWidth * i * 4] = red;
+              canvasData.data[index + 5 + canvasWidth * i * 4] = green;
+              canvasData.data[index + 6 + canvasWidth * i * 4] = blue;
+              canvasData.data[index + 7 + canvasWidth * i * 4] = alpha;
+              canvasData.data[index + 8 + canvasWidth * i * 4] = red;
+              canvasData.data[index + 9 + canvasWidth * i * 4] = green;
+              canvasData.data[index + 10 + canvasWidth * i * 4] = blue;
+              canvasData.data[index + 11 + canvasWidth * i * 4] = alpha;
+              canvasData.data[index + 12 + canvasWidth * i * 4] = red;
+              canvasData.data[index + 13 + canvasWidth * i * 4] = green;
+              canvasData.data[index + 14 + canvasWidth * i * 4] = blue;
+              canvasData.data[index + 15 + canvasWidth * i * 4] = alpha;
+            }
+            if (i == 3) {
+              canvasData.data[index + canvasWidth * i * 4] = red;
+              canvasData.data[index + 1 + canvasWidth * i * 4] = green;
+              canvasData.data[index + 2 + canvasWidth * i * 4] = blue;
+              canvasData.data[index + 3 + canvasWidth * i * 4] = alpha;
+              canvasData.data[index + 4 + canvasWidth * i * 4] = red;
+              canvasData.data[index + 5 + canvasWidth * i * 4] = green;
+              canvasData.data[index + 6 + canvasWidth * i * 4] = blue;
+              canvasData.data[index + 7 + canvasWidth * i * 4] = alpha;
+              canvasData.data[index + 8 + canvasWidth * i * 4] = red;
+              canvasData.data[index + 9 + canvasWidth * i * 4] = green;
+              canvasData.data[index + 10 + canvasWidth * i * 4] = blue;
+              canvasData.data[index + 11 + canvasWidth * i * 4] = alpha;
+              canvasData.data[index + 12 + canvasWidth * i * 4] = red;
+              canvasData.data[index + 13 + canvasWidth * i * 4] = green;
+              canvasData.data[index + 14 + canvasWidth * i * 4] = blue;
+              canvasData.data[index + 15 + canvasWidth * i * 4] = alpha;
+              canvasData.data[index + 16 + canvasWidth * i * 4] = red;
+              canvasData.data[index + 17 + canvasWidth * i * 4] = green;
+              canvasData.data[index + 18 + canvasWidth * i * 4] = blue;
+              canvasData.data[index + 19 + canvasWidth * i * 4] = alpha;
+            }
+          }
+          if (star.animationTik == 2 || star.animationTik == 3 || star.animationTik == 6 || star.animationTik == 7) {
+            if (i == 0 || i == 6) {
+              canvasData.data[index + 8 + canvasWidth * i * 4] = red;
+              canvasData.data[index + 9 + canvasWidth * i * 4] = green;
+              canvasData.data[index + 10 + canvasWidth * i * 4] = blue;
+              canvasData.data[index + 11 + canvasWidth * i * 4] = alpha;
+            }
+            if (i == 3) {
+              canvasData.data[index - 4 + canvasWidth * i * 4] = red;
+              canvasData.data[index - 3 + canvasWidth * i * 4] = green;
+              canvasData.data[index - 2 + canvasWidth * i * 4] = blue;
+              canvasData.data[index - 1 + canvasWidth * i * 4] = alpha;
+              canvasData.data[index + 20 + canvasWidth * i * 4] = red;
+              canvasData.data[index + 21 + canvasWidth * i * 4] = green;
+              canvasData.data[index + 22 + canvasWidth * i * 4] = blue;
+              canvasData.data[index + 23 + canvasWidth * i * 4] = alpha;
+            }
+          }
+          if (star.animationTik == 4 || star.animationTik == 5) {
+            if (i == 0 || i == 6) {
+              canvasData.data[index + 8 + canvasWidth * i * 4] = red;
+              canvasData.data[index + 9 + canvasWidth * i * 4] = green;
+              canvasData.data[index + 10 + canvasWidth * i * 4] = blue;
+              canvasData.data[index + 11 + canvasWidth * i * 4] = alpha;
+            }
+            if (i == 1 || i == 5) {
+              canvasData.data[index + canvasWidth * i * 4] = red;
+              canvasData.data[index + 1 + canvasWidth * i * 4] = green;
+              canvasData.data[index + 2 + canvasWidth * i * 4] = blue;
+              canvasData.data[index + 3 + canvasWidth * i * 4] = alpha;
+              canvasData.data[index + 16 + canvasWidth * i * 4] = red;
+              canvasData.data[index + 17 + canvasWidth * i * 4] = green;
+              canvasData.data[index + 18 + canvasWidth * i * 4] = blue;
+              canvasData.data[index + 19 + canvasWidth * i * 4] = alpha;
+            }
+            if (i == 3) {
+              canvasData.data[index - 4 + canvasWidth * i * 4] = red;
+              canvasData.data[index - 3 + canvasWidth * i * 4] = green;
+              canvasData.data[index - 2 + canvasWidth * i * 4] = blue;
+              canvasData.data[index - 1 + canvasWidth * i * 4] = alpha;
+              canvasData.data[index + 20 + canvasWidth * i * 4] = red;
+              canvasData.data[index + 21 + canvasWidth * i * 4] = green;
+              canvasData.data[index + 22 + canvasWidth * i * 4] = blue;
+              canvasData.data[index + 23 + canvasWidth * i * 4] = alpha;
+            }
+          }
         }
-      }
-      break;
+        break;
+    }
   }
 };
 
 const shiftStars = () => {
   starmap1.forEach(star => {
     star.x += 0.02;
-    if (star.x >= 100.1) star.x = -0.05;
+    if (star.x >= 99.5) {
+      star.x = 0.2;
+      star.y = chance.integer({ min: 0, max: 100 });
+    }
   });
   starmap2.forEach(star => {
     star.x += 0.03;
-    if (star.x >= 101) star.x = -0.05;
+    if (star.x >= 99) {
+      star.x = 1;
+      star.y = chance.integer({ min: 0, max: 100 });
+    }
   });
   starmap3.forEach(star => {
     star.x += 0.05;
-    if (star.x >= 101) star.x = -0.05;
+    if (star.x >= 98) {
+      star.x = 1.5;
+      star.y = chance.integer({ min: 0, max: 100 });
+    }
   });
 };
 
@@ -287,7 +338,7 @@ const starmap2: star[] = [];
 const starmap3: star[] = [];
 
 for (let i = 0; i < NUM_STAR1; i++) {
-  const color = chance.weighted(["FFFFFF", "58D68D", "EC7063", "F7DC6F", "E74C3C"], [75, 1, 1, 1, 1]);
+  const color = chance.weighted(["FFFFFF", "0AF040", "2387F9", "F22626", "E88A20"], [50, 1, 1, 1, 1]);
   const x = chance.integer({ min: 0, max: 100 });
   const y = chance.integer({ min: 0, max: 100 });
   const r = chance.integer({ min: 1, max: 3 });
@@ -304,7 +355,7 @@ for (let i = 0; i < NUM_STAR1; i++) {
 }
 
 for (let i = 0; i < NUM_STAR2; i++) {
-  const color = chance.weighted(["FFFFFF", "58D68D", "EC7063", "F7DC6F", "E74C3C"], [60, 1, 1, 1, 1]);
+  const color = chance.weighted(["FFFFFF", "0AF040", "2387F9", "F22626", "E88A20"], [40, 1, 1, 1, 1]);
   const x = chance.integer({ min: 0, max: 100 });
   const y = chance.integer({ min: 0, max: 100 });
   const r = chance.integer({ min: 2, max: 3 });
@@ -321,20 +372,35 @@ for (let i = 0; i < NUM_STAR2; i++) {
 }
 
 for (let i = 0; i < NUM_STAR3; i++) {
-  const color = chance.weighted(["FFFFFF", "58D68D", "EC7063", "F7DC6F", "E74C3C"], [50, 1, 1, 1, 1]);
+  const color = chance.weighted(["FFFFFF", "0AF040", "2387F9", "F22626", "E88A20"], [30, 1, 1, 1, 1]);
   const x = chance.integer({ min: 0, max: 100 });
   const y = chance.integer({ min: 0, max: 100 });
   const r = chance.integer({ min: 4, max: 5 });
-  starmap3.push({
-    color: color,
-    x: x,
-    y: y,
-    r: r,
-    twinkle: {
-      isActive: false,
-      counter: 0,
-    },
-  });
+  if (r == 5) {
+    starmap3.push({
+      color: color,
+      x: x,
+      y: y,
+      r: r,
+      twinkle: {
+        isActive: false,
+        counter: 0,
+      },
+      isAnimated: false,
+      animationTik: 0,
+    });
+  } else {
+    starmap3.push({
+      color: color,
+      x: x,
+      y: y,
+      r: r,
+      twinkle: {
+        isActive: false,
+        counter: 0,
+      },
+    });
+  }
 }
 
 let startime: number,
