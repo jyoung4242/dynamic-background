@@ -90,7 +90,7 @@ const drawStar = (star: star) => {
     star.twinkle.counter = 0;
   } else {
     //random chance of twinkling
-    if (chance.floating({ min: 0.0, max: 100.0 }) <= 0.5) {
+    if (chance.floating({ min: 0.0, max: 100.0 }) <= 0.07) {
       star.twinkle.counter += 1;
       star.twinkle.isActive = true;
     }
