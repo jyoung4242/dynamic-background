@@ -308,21 +308,21 @@ const drawGalaxy = (galaxy: galaxy) => {
 
 const shiftStars = () => {
   starmap1.forEach(star => {
-    star.x += 0.02;
+    star.x += 0.002;
     if (star.x >= 99.5) {
       star.x = 0.2;
       star.y = chance.integer({ min: 0, max: 100 });
     }
   });
   starmap2.forEach(star => {
-    star.x += 0.03;
+    star.x += 0.005;
     if (star.x >= 99) {
       star.x = 1;
       star.y = chance.integer({ min: 0, max: 100 });
     }
   });
   starmap3.forEach(star => {
-    star.x += 0.05;
+    star.x += 0.0075;
     if (star.x >= 98) {
       star.x = 1.5;
       star.y = chance.integer({ min: 0, max: 100 });
@@ -482,7 +482,7 @@ const update = (timestamp: number) => {
 
     galaxies.forEach(gal => {
       gal.tik += 1;
-      if (gal.tik >= 5) {
+      if (gal.tik >= 25) {
         gal.tik = 0;
         gal.frame += 1;
       }
