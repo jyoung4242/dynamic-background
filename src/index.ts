@@ -299,8 +299,8 @@ const drawGalaxy = (galaxy: galaxy) => {
   if (newX >= canvasWidth || newY < 0 || newY > canvasHeight) {
     galaxy.x = 0;
     galaxy.y = chance.integer({ min: 0, max: 100 });
-    galaxy.velocity.x = chance.floating({ min: 0, max: 0.1 });
-    galaxy.velocity.y = chance.floating({ min: -0.1, max: 0.1 });
+    galaxy.velocity.x = chance.floating({ min: 0, max: 0.01 });
+    galaxy.velocity.y = chance.floating({ min: -0.01, max: 0.01 });
   }
   const sx = galaxy.frame * 32;
   ctx.drawImage(galaxyImage, sx, 0, 32, 32, newX, newY, 32, 32);
@@ -438,8 +438,8 @@ for (let i = 0; i < NUM_STAR3; i++) {
 for (let i = 0; i < NUM_GALAXY; i++) {
   const x = chance.integer({ min: 0, max: 100 });
   const y = chance.integer({ min: 0, max: 100 });
-  const vx = chance.floating({ min: 0, max: 0.075 });
-  const vy = chance.floating({ min: -0.075, max: 0.075 });
+  const vx = chance.floating({ min: 0, max: 0.01 });
+  const vy = chance.floating({ min: -0.01, max: 0.01 });
   const frame = chance.integer({ min: 0, max: 5 });
   galaxies.push({
     x: x,
