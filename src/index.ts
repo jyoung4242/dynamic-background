@@ -10,8 +10,9 @@ galaxyImage.src = galaxy;
 const ctx = (cnv as HTMLCanvasElement).getContext("2d");
 const chance = new Chance(); // initialize the noise function
 let noise2D = createNoise2D();
-noise2D = fbm2d(noise2D, 20);
-const colorScale = chroma.scale(["black", "01001f"]);
+noise2D = fbm2d(noise2D, 3);
+
+const colorScale = chroma.scale(["black", "2e0d36"]);
 
 let canvasWidth = cnv.clientWidth;
 let canvasHeight = cnv.clientHeight;
@@ -299,8 +300,8 @@ const drawGalaxy = (galaxy: galaxy) => {
   if (newX >= canvasWidth || newY < 0 || newY > canvasHeight) {
     galaxy.x = 0;
     galaxy.y = chance.integer({ min: 0, max: 100 });
-    galaxy.velocity.x = chance.floating({ min: 0, max: 0.01 });
-    galaxy.velocity.y = chance.floating({ min: -0.01, max: 0.01 });
+    galaxy.velocity.x = chance.floating({ min: 0, max: 0.005 });
+    galaxy.velocity.y = chance.floating({ min: -0.01, max: 0.005 });
   }
   const sx = galaxy.frame * 32;
   ctx.drawImage(galaxyImage, sx, 0, 32, 32, newX, newY, 32, 32);
@@ -438,8 +439,8 @@ for (let i = 0; i < NUM_STAR3; i++) {
 for (let i = 0; i < NUM_GALAXY; i++) {
   const x = chance.integer({ min: 0, max: 100 });
   const y = chance.integer({ min: 0, max: 100 });
-  const vx = chance.floating({ min: 0, max: 0.01 });
-  const vy = chance.floating({ min: -0.01, max: 0.01 });
+  const vx = chance.floating({ min: 0, max: 0.005 });
+  const vy = chance.floating({ min: -0.005, max: 0.005 });
   const frame = chance.integer({ min: 0, max: 5 });
   galaxies.push({
     x: x,
@@ -482,7 +483,7 @@ const update = (timestamp: number) => {
 
     galaxies.forEach(gal => {
       gal.tik += 1;
-      if (gal.tik >= 25) {
+      if (gal.tik >= 50) {
         gal.tik = 0;
         gal.frame += 1;
       }
