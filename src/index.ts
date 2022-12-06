@@ -1,9 +1,12 @@
 import "./style.css";
+import galaxy from "./assets/galaxy-Sheet.png";
 import { Chance } from "chance";
 import { createNoise2D, NoiseFunction2D } from "simplex-noise";
 import chroma from "chroma-js";
 
 const cnv = document.getElementById("cnv");
+const galaxyImage = new Image();
+galaxyImage.src = galaxy;
 const ctx = (cnv as HTMLCanvasElement).getContext("2d");
 const chance = new Chance(); // initialize the noise function
 let noise2D = createNoise2D();
@@ -15,9 +18,10 @@ let canvasHeight = cnv.clientHeight;
 console.log(`screensize: w: ${cnv.clientWidth}, h: ${cnv.clientHeight}`);
 let canvasData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
 let dataCopy: Uint8ClampedArray;
-let NUM_STAR1 = (800 / 1920) * canvasWidth;
-let NUM_STAR2 = (100 / 1920) * canvasWidth;
-let NUM_STAR3 = (20 / 1920) * canvasWidth;
+let NUM_STAR1 = Math.ceil((800 / 1920) * canvasWidth);
+let NUM_STAR2 = Math.ceil((100 / 1920) * canvasWidth);
+let NUM_STAR3 = Math.ceil((20 / 1920) * canvasWidth);
+let NUM_GALAXY = Math.ceil((5 / 1920) * canvasWidth);
 let pause: boolean = false;
 
 cnv.setAttribute("width", canvasWidth.toString());
@@ -37,6 +41,17 @@ type star = {
   };
   isAnimated?: boolean;
   animationTik?: number;
+};
+
+type galaxy = {
+  x: number;
+  y: number;
+  velocity: {
+    x: number;
+    y: number;
+  };
+  frame: number;
+  tik: number;
 };
 
 function fbm2d(noise2D: NoiseFunction2D, octaves: number): NoiseFunction2D {
@@ -275,6 +290,22 @@ const drawStar = (star: star) => {
   }
 };
 
+const drawGalaxy = (galaxy: galaxy) => {
+  galaxy.x += galaxy.velocity.x;
+  galaxy.y += galaxy.velocity.y;
+  const newX = Math.floor((galaxy.x / 100) * canvasWidth);
+  const newY = Math.floor((galaxy.y / 100) * canvasHeight);
+
+  if (newX >= canvasWidth || newY < 0 || newY > canvasHeight) {
+    galaxy.x = 0;
+    galaxy.y = chance.integer({ min: 0, max: 100 });
+    galaxy.velocity.x = chance.floating({ min: 0, max: 0.1 });
+    galaxy.velocity.y = chance.floating({ min: -0.1, max: 0.1 });
+  }
+  const sx = galaxy.frame * 32;
+  ctx.drawImage(galaxyImage, sx, 0, 32, 32, newX, newY, 32, 32);
+};
+
 const shiftStars = () => {
   starmap1.forEach(star => {
     star.x += 0.02;
@@ -336,6 +367,7 @@ document.addEventListener("keydown", e => {
 const starmap1: star[] = [];
 const starmap2: star[] = [];
 const starmap3: star[] = [];
+const galaxies: galaxy[] = [];
 
 for (let i = 0; i < NUM_STAR1; i++) {
   const color = chance.weighted(["FFFFFF", "0AF040", "2387F9", "F22626", "E88A20"], [50, 1, 1, 1, 1]);
@@ -403,6 +435,21 @@ for (let i = 0; i < NUM_STAR3; i++) {
   }
 }
 
+for (let i = 0; i < NUM_GALAXY; i++) {
+  const x = chance.integer({ min: 0, max: 100 });
+  const y = chance.integer({ min: 0, max: 100 });
+  const vx = chance.floating({ min: 0, max: 0.075 });
+  const vy = chance.floating({ min: -0.075, max: 0.075 });
+  const frame = chance.integer({ min: 0, max: 5 });
+  galaxies.push({
+    x: x,
+    y: y,
+    velocity: { x: vx, y: vy },
+    frame: frame,
+    tik: 0,
+  });
+}
+
 let startime: number,
   lasttime: number,
   fps: string,
@@ -427,12 +474,21 @@ const update = (timestamp: number) => {
 
   while (lastRenderUpdate >= renderInterval) {
     shiftStars();
-
     canvasData.data.set(dataCopy);
     starmap1.forEach(star => drawStar(star));
     starmap2.forEach(star => drawStar(star));
     starmap3.forEach(star => drawStar(star));
     ctx.putImageData(canvasData, 0, 0);
+
+    galaxies.forEach(gal => {
+      gal.tik += 1;
+      if (gal.tik >= 5) {
+        gal.tik = 0;
+        gal.frame += 1;
+      }
+      if (gal.frame >= 5) gal.frame = 0;
+      drawGalaxy(gal);
+    });
 
     lastRenderUpdate -= renderInterval;
   }
